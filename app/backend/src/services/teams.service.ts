@@ -1,8 +1,9 @@
 import Team from '../database/models/Team.model';
-import ITeam from '../interfaces';
-import ITeamService from './interfaces';
+import { ITeam } from '../interfaces';
+import { ITeamsService } from './interfaces';
+import CreateError from '../utils/generateError';
 
-class TeamsService implements ITeamService {
+class TeamsService implements ITeamsService {
   getAll = async (): Promise<ITeam[]> => {
     const teams = await Team.findAll();
     return teams;
@@ -10,6 +11,10 @@ class TeamsService implements ITeamService {
 
   getById = async (id: number): Promise<ITeam | null> => {
     const team = await Team.findByPk(id);
+
+    if (!team) {
+      throw new CreateError(404, 'Team not found');
+    }
     return team;
   };
 }

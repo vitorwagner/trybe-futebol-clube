@@ -1,4 +1,4 @@
-import ITeam from '../../interfaces';
+import { ITeam } from '../../interfaces';
 
 export interface ITeamsService {
   getAll(): Promise<ITeam[]>;

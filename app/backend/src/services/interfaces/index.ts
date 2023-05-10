@@ -1,3 +1,7 @@
 import { ITeamsService } from './ITeamsService';
+import { IUsersService } from './IUsersService';
 
-export default ITeamsService;
+export {
+  ITeamsService,
+  IUsersService,
+};
