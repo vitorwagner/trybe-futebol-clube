@@ -1,5 +1,4 @@
-export default interface ILeaderboardRow {
-  name: string;
+export interface IStats {
   totalPoints: number;
   totalGames: number;
   totalVictories: number;
@@ -9,4 +8,8 @@ export default interface ILeaderboardRow {
   goalsOwn: number;
   goalsBalance: number;
   efficiency: number;
+}
+
+export default interface ILeaderboardRow extends IStats {
+  name: string;
 }

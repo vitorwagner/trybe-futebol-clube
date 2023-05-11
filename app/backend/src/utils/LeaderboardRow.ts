@@ -1,5 +1,4 @@
-/* eslint-disable max-lines-per-function */
-import { ILeaderboardRow, IMatch, ITeam } from '../interfaces';
+import { ILeaderboardRow, IMatch, ITeam, IStats } from '../interfaces';
 
 const leaderboardMock = [
   {
@@ -31,17 +30,23 @@ const leaderboardMock = [
 class LeaderboardRow {
   static createHomeLeaderboardRow(matches: IMatch[], team: ITeam): ILeaderboardRow {
     const matchesPlayed = matches.filter((match) => match.homeTeamId === team.id);
+    const stats = LeaderboardRow.getHomeTeamStats(matchesPlayed);
+
+    return {
+      name: team.teamName,
+      ...stats,
+    };
+  }
+
+  static getHomeTeamStats(matchesPlayed: IMatch[]): IStats {
     const matchesWon = matchesPlayed.filter((match) => match.homeTeamGoals > match.awayTeamGoals);
-    const matchesDrawn = matchesPlayed.filter((match) =>
-      match.homeTeamGoals === match.awayTeamGoals);
+    const matchesDrawn = matchesPlayed.filter((m) => m.homeTeamGoals === m.awayTeamGoals);
     const matchesLost = matchesPlayed.filter((match) => match.homeTeamGoals < match.awayTeamGoals);
     const goalsFavor = matchesPlayed.reduce((acc, match) => acc + match.homeTeamGoals, 0);
     const goalsOwn = matchesPlayed.reduce((acc, match) => acc + match.awayTeamGoals, 0);
     const totalPoints = (matchesWon.length * 3 + matchesDrawn.length);
     const efficiency = Number(((totalPoints / (matchesPlayed.length * 3)) * 100).toFixed(2));
-
     return {
-      name: team.teamName,
       totalPoints,
       totalGames: matchesPlayed.length,
       totalVictories: matchesWon.length,
