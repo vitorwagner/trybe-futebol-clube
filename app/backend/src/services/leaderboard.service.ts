@@ -12,10 +12,9 @@ class LeaderboardService implements ILeaderboardService {
   };
 
   getAwayLeaderboard = async (): Promise<ILeaderboardRow[]> => {
-    // const teams = await Team.findAll();
-    // const matches = await Match.findAll({ where: { inProgress: false } });
-    console.log('away');
-    return Leaderboard.getAwayLeaderboard();
+    const teams = await Team.findAll();
+    const matches = await Match.findAll({ where: { inProgress: false } });
+    return Leaderboard.getAwayLeaderboard(matches, teams);
   };
 
   getFullLeaderboard = async (): Promise<ILeaderboardRow[]> => {

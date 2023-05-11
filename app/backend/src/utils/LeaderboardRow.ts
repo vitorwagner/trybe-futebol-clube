@@ -59,7 +59,37 @@ class LeaderboardRow {
     };
   }
 
-  static createAwayLeaderboardRow(): ILeaderboardRow { return leaderboardMock[1]; }
+  static createAwayLeaderboardRow(matches: IMatch[], team: ITeam): ILeaderboardRow {
+    const matchesPlayed = matches.filter((match) => match.awayTeamId === team.id);
+    const stats = LeaderboardRow.getAwayTeamStats(matchesPlayed);
+
+    return {
+      name: team.teamName,
+      ...stats,
+    };
+  }
+
+  static getAwayTeamStats(matchesPlayed: IMatch[]): IStats {
+    const matchesWon = matchesPlayed.filter((match) => match.awayTeamGoals > match.homeTeamGoals);
+    const matchesDrawn = matchesPlayed.filter((m) => m.awayTeamGoals === m.homeTeamGoals);
+    const matchesLost = matchesPlayed.filter((match) => match.awayTeamGoals < match.homeTeamGoals);
+    const goalsFavor = matchesPlayed.reduce((acc, match) => acc + match.awayTeamGoals, 0);
+    const goalsOwn = matchesPlayed.reduce((acc, match) => acc + match.homeTeamGoals, 0);
+    const totalPoints = (matchesWon.length * 3 + matchesDrawn.length);
+    const efficiency = Number(((totalPoints / (matchesPlayed.length * 3)) * 100).toFixed(2));
+    return {
+      totalPoints,
+      totalGames: matchesPlayed.length,
+      totalVictories: matchesWon.length,
+      totalDraws: matchesDrawn.length,
+      totalLosses: matchesLost.length,
+      goalsFavor,
+      goalsOwn,
+      goalsBalance: goalsFavor - goalsOwn,
+      efficiency,
+    };
+  }
+
   static createFullLeaderboardRow(): ILeaderboardRow { return leaderboardMock[0]; }
 }
 

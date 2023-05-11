@@ -73,7 +73,12 @@ class Leaderboard {
     return Leaderboard.sortLeaderboard(leaderboard);
   }
 
-  static getAwayLeaderboard(): ILeaderboardRow[] { return leaderboardMock; }
+  static getAwayLeaderboard(matches: IMatch[], teams: ITeam[]): ILeaderboardRow[] {
+    const leaderboard = teams.map((team) =>
+      LeaderboardRow.createAwayLeaderboardRow(matches, team));
+    return Leaderboard.sortLeaderboard(leaderboard);
+  }
+
   static getFullLeaderboard(): ILeaderboardRow[] {
     return Leaderboard.sortLeaderboard(leaderboardMock);
   }
