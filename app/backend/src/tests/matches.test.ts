@@ -140,3 +140,35 @@ describe('Tests /matches/:id PATCH endpoint', async () => {
     expect(response.body).to.be.deep.eq({ message: 'Match not found' });
   });
 });
+
+describe('Tests /matches/:id/finish PATCH endpoint', async () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('Should return a message', async () => {
+    sinon.stub(Match, 'update').resolves([1]);
+    sinon.stub(jsonwebtoken, 'verify').resolves(mockedPayload);
+
+    const response = await chai
+    .request(app)
+    .patch('/matches/1/finish')
+    .set({ "Authorization": mockedToken });
+
+    expect(response.status).to.be.eq(200);
+    expect(response.body).to.be.deep.eq({ message: 'Finished' });
+  });
+
+  it('Should return a 404 error', async () => {
+    sinon.stub(Match, 'update').resolves([0]);
+    sinon.stub(jsonwebtoken, 'verify').resolves(mockedPayload);
+
+    const response = await chai
+    .request(app)
+    .patch('/matches/777/finish')
+    .set({ "Authorization": mockedToken });
+
+    expect(response.status).to.be.eq(404);
+    expect(response.body).to.be.deep.eq({ message: 'Match not found' });
+  });
+});
