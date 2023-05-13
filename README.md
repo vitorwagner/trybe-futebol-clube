@@ -1,4 +1,4 @@
-# Recipes App
+# Trybe Futebol Clube
 Projeto da [Trybe](https://www.betrybe.com/).
 
 ## 💻 Projeto
