@@ -6,6 +6,13 @@ Projeto da [Trybe](https://www.betrybe.com/).
 ## 🚀 Tecnologias
 > Este projeto foi desenvolvido com as seguintes tecnologias:
 
+- TypeScript
+- Node.js
+- Express
+- Sequelize
+- Docker
+- Mocha/Chai
+
 ## 💬 Contato
 
 <div align="center" style="display: inline_block">
