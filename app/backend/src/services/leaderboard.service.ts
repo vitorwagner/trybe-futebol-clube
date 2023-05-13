@@ -18,10 +18,9 @@ class LeaderboardService implements ILeaderboardService {
   };
 
   getFullLeaderboard = async (): Promise<ILeaderboardRow[]> => {
-    // const teams = await Team.findAll();
-    // const matches = await Match.findAll({ where: { inProgress: false } });
-    console.log('full');
-    return Leaderboard.getFullLeaderboard();
+    const teams = await Team.findAll();
+    const matches = await Match.findAll({ where: { inProgress: false } });
+    return Leaderboard.getFullLeaderboard(matches, teams);
   };
 }
 

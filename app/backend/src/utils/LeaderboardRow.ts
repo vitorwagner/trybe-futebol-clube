@@ -1,32 +1,5 @@
 import { ILeaderboardRow, IMatch, ITeam, IStats } from '../interfaces';
 
-const leaderboardMock = [
-  {
-    name: 'Palmeiras',
-    totalPoints: 13,
-    totalGames: 5,
-    totalVictories: 4,
-    totalDraws: 1,
-    totalLosses: 0,
-    goalsFavor: 17,
-    goalsOwn: 5,
-    goalsBalance: 12,
-    efficiency: 86.67,
-  },
-  {
-    name: 'Corinthians',
-    totalPoints: 15,
-    totalGames: 5,
-    totalVictories: 4,
-    totalDraws: 0,
-    totalLosses: 1,
-    goalsFavor: 12,
-    goalsOwn: 3,
-    goalsBalance: 9,
-    efficiency: 80,
-  },
-];
-
 class LeaderboardRow {
   static createHomeLeaderboardRow(matches: IMatch[], team: ITeam): ILeaderboardRow {
     const matchesPlayed = matches.filter((match) => match.homeTeamId === team.id);
@@ -90,7 +63,37 @@ class LeaderboardRow {
     };
   }
 
-  static createFullLeaderboardRow(): ILeaderboardRow { return leaderboardMock[0]; }
+  static createFullLeaderboardRow(matches: IMatch[], team: ITeam): ILeaderboardRow {
+    const homeMatchesPlayed = matches.filter((match) => match.homeTeamId === team.id);
+    const awayMatchesPlayed = matches.filter((match) => match.awayTeamId === team.id);
+    const stats = LeaderboardRow.getFullTeamStats(homeMatchesPlayed, awayMatchesPlayed);
+
+    return {
+      name: team.teamName,
+      ...stats,
+    };
+  }
+
+  static getFullTeamStats(homeMatchesPlayed: IMatch[], awayMatchesPlayed: IMatch[]): IStats {
+    const homeStats = LeaderboardRow.getHomeTeamStats(homeMatchesPlayed);
+    const awayStats = LeaderboardRow.getAwayTeamStats(awayMatchesPlayed);
+    const totalPoints = homeStats.totalPoints + awayStats.totalPoints;
+    const totalGames = homeStats.totalGames + awayStats.totalGames;
+    const totalLosses = homeStats.totalLosses + awayStats.totalLosses;
+    const goalsFavor = homeStats.goalsFavor + awayStats.goalsFavor;
+    const goalsOwn = homeStats.goalsOwn + awayStats.goalsOwn;
+    return {
+      totalPoints,
+      totalGames,
+      totalVictories: homeStats.totalVictories + awayStats.totalVictories,
+      totalDraws: homeStats.totalDraws + awayStats.totalDraws,
+      totalLosses,
+      goalsFavor,
+      goalsOwn,
+      goalsBalance: goalsFavor - goalsOwn,
+      efficiency: Number(((totalPoints / ((totalGames) * 3)) * 100).toFixed(2)),
+    };
+  }
 }
 
 export default LeaderboardRow;
